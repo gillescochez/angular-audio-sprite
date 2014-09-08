@@ -1,17 +1,13 @@
 module.exports = function(grunt) {
 
     var sources = [
-        "source/build/intro.js",
-        "source/controllers/*.js",
-        "source/app/*.js",
-        "source/build/outro.js"
+        "source/*.js",
     ];
 
-    var src = "dist/<%= pkg.name %>.src.js";
-    var min = "dist/<%= pkg.name %>.min.js";
-    var app = "app/js/<%= pkg.name %>.js";
+    var src = "<%= pkg.name %>.js";
+    var min = "<%= pkg.name %>.min.js";
 
-    var tasks = ["concat", "uglify", "copy", "clean"];
+    var tasks = ["concat", "uglify"];
 
     // config
     grunt.initConfig({
@@ -33,22 +29,13 @@ module.exports = function(grunt) {
                 files: sources,
                 tasks: tasks
             }
-        },
-        copy: {
-            main: {
-                src: [min],
-                dest: app
-            }
-        },
-        clean: ["dist"]
+        }
     });
 
     // Load the plugins
     grunt.loadNpmTasks("grunt-contrib-concat");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-contrib-watch");
-    grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-contrib-clean");
 
     // Default task(s).
     grunt.registerTask("default", tasks);

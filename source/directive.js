@@ -1,4 +1,4 @@
-angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSprite", function(audioSprite) {
+angular.module("ngAudioSprite.directive", []).directive("audioSpriteSingle", ["audioSprite", function(audioSprite) {
 
     var player;
     var map = {};
@@ -83,11 +83,11 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
 
             bindPlayer();
 
-            audioSprite.getSprite(attr.audioSprite).success(function(data) {
+            audioSprite.getSprite(attr.audioSpriteSingle).success(function(data) {
 
                 map = data.spritemap;
 
-                setResource(data.resources, getPath(attr.audioSprite));
+                setResource(data.resources, getPath(attr.audioSpriteSingle));
 
                 scope.$watch(function() { return audioSprite.id }, function(id) {
                     id && play(id);

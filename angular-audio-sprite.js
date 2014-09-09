@@ -27,28 +27,25 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
 
     function setResource(resources, path) {
 
-        var source = document.createElement("source");
+        var source = angular.element(player).children()[0] || document.createElement("source");
         var extension = "." + type;
         var length = resources.length;
         var i = 0;
 
-        source.type = "audio/" + type;
+        if (!source.type || source.type !== type) {
+            source.type = "audio/" + type;
+        }
 
         for (; i < length; i++) {
             if (resources[i].substr(-4) === extension) {
+                if (!source.src) {
+                    player.appendChild(source);
+                }
                 source.src = path + resources[i];
-                player.appendChild(source);
                 return;
             }
         }
     }
-
-    function getPath(url) {
-        var parts = url.split("/");
-        parts.splice(parts.length - 1, 1);
-        return parts.join("/") + "/";
-    }
-
 
     function onTimeUpdate() {
         if (player.currentTime >= current.end) {
@@ -77,22 +74,20 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
 
             player = element[0];
 
-            if (!type) {
-                detectType();
-            }
+            !type && detectType();
 
             bindPlayer();
 
-            audioSprite.getSprite(attr.audioSprite).success(function(data) {
+            scope.$watch(function() { return audioSprite.config }, function(config) {
 
-                map = data.spritemap;
+                if (config.resources && config.spritemap) {
+                    setResource(config.resources, config.path);
+                    map = config.spritemap;
+                }
+            });
 
-                setResource(data.resources, getPath(attr.audioSprite));
-
-                scope.$watch(function() { return audioSprite.id }, function(id) {
-                    id && play(id);
-                });
-
+            scope.$watch(function() { return audioSprite.id }, function(id) {
+                id && play(id);
             });
 
         }
@@ -106,16 +101,31 @@ angular.module("ngAudioSprite", [
 ]);
 angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", function($http) {
 
+    function getPath(url) {
+        var parts = url.split("/");
+        parts.splice(parts.length - 1, 1);
+        return parts.join("/") + "/";
+    }
+
     return {
 
         id: "",
+        config: {},
 
         play: function(id) {
             this.id = id;
         },
 
-        getSprite: function(file) {
-            return $http.get(file);
+        load: function(file) {
+
+            var self = this;
+
+            $http.get(file).success(function(data) {
+                self.config = data;
+                self.config.path = getPath(file);
+            }).error(function() {
+                throw "Failed to retrieve audio sprite configuration file: " + file;
+            })
         }
     };
 

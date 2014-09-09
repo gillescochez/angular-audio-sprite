@@ -3,7 +3,7 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
     var player;
     var map = {};
     var current = {};
-    var types = ["ogg","m4a","mp3", "ac3"];
+    var types = ["ogg","m4a","mp3", "ac3", "caf"];
     var type = "";
 
     function detectType() {

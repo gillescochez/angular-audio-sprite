@@ -1,8 +1,10 @@
 angular.module("demo", ["ngAudioSprite"]).controller("main", ["$scope", "audioSprite", function($scope, audioSprite) {
 
-    $scope.play = function() {
+    $scope.list = ["round1", "round2", "round3", "round4", "round5", "round6", "round7", "round-final"];
 
-        audioSprite.play("round1");
+    $scope.play = function(id) {
+
+        audioSprite.play(id);
 
     };
 

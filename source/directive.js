@@ -43,13 +43,6 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
         }
     }
 
-    function getPath(url) {
-        var parts = url.split("/");
-        parts.splice(parts.length - 1, 1);
-        return parts.join("/") + "/";
-    }
-
-
     function onTimeUpdate() {
         if (player.currentTime >= current.end) {
             player.pause();
@@ -77,22 +70,20 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
 
             player = element[0];
 
-            if (!type) {
-                detectType();
-            }
+            !type && detectType();
 
             bindPlayer();
 
-            audioSprite.getSprite(attr.audioSprite).success(function(data) {
+            scope.$watch(function() { return audioSprite.config }, function(config) {
 
-                map = data.spritemap;
+                if (config.resources && config.spritemap) {
+                    setResource(config.resources, config.path);
+                    map = config.spritemap;
+                }
+            });
 
-                setResource(data.resources, getPath(attr.audioSprite));
-
-                scope.$watch(function() { return audioSprite.id }, function(id) {
-                    id && play(id);
-                });
-
+            scope.$watch(function() { return audioSprite.id }, function(id) {
+                id && play(id);
             });
 
         }

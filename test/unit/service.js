@@ -48,9 +48,9 @@ describe("angular audio sprite service", function() {
         expect(typeof audioSprite.play).toEqual("function");
     }));
 
-    it("should expose a getSprite method", inject(function(audioSprite) {
-        expect(audioSprite.getSprite).toBeDefined();
-        expect(typeof audioSprite.getSprite).toEqual("function");
+    it("should expose a load method", inject(function(audioSprite) {
+        expect(audioSprite.load).toBeDefined();
+        expect(typeof audioSprite.load).toEqual("function");
     }));
 
     it("should update the id property on play", inject(function(audioSprite) {
@@ -61,7 +61,7 @@ describe("angular audio sprite service", function() {
 
     it("should return audio sprite config on getSprite", inject(function(audioSprite) {
         $httpBackend.expectGET("sprite.json");
-        audioSprite.getSprite("sprite.json");
+        audioSprite.load("sprite.json");
         $httpBackend.flush();
     }));
 

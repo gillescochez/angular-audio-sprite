@@ -1,6 +1,5 @@
 describe("angular audio sprite directive", function() {
 
-    var $httpBackend;
     var $rootScope;
     var $compile;
 
@@ -8,10 +7,16 @@ describe("angular audio sprite directive", function() {
     beforeEach(module("ngAudioSprite.directive"));
 
     beforeEach(inject(function($injector) {
+        $rootScope = $injector.get("$rootScope");
+        $compile = $injector.get("$compile");
+    }));
 
-        $httpBackend = $injector.get('$httpBackend');
+    it("should GET request the JSON configuration", inject(function(audioSprite) {
 
-        $httpBackend.when('GET', 'sprite.json').respond({
+        var element = $compile('<audio audio-sprite="sprite.json"></audio>')($rootScope);
+
+        audioSprite.path = "app/audio/";
+        audioSprite.config = {
             "resources": [
                 "sprite.ogg",
                 "sprite.m4a",
@@ -30,23 +35,7 @@ describe("angular audio sprite directive", function() {
                     "loop": false
                 }
             }
-        });
-
-        $rootScope = $injector.get('$rootScope');
-        $compile = $injector.get('$compile');
-    }));
-
-
-    afterEach(function() {
-        $httpBackend.verifyNoOutstandingExpectation();
-        $httpBackend.verifyNoOutstandingRequest();
-    });
-
-    it("should GET request the JSON configuration", inject(function() {
-
-        $httpBackend.expectGET("sprite.json");
-        $compile('<audio audio-sprite="sprite.json"></audio>')($rootScope);
-        $httpBackend.flush();
+        };
 
     }));
 

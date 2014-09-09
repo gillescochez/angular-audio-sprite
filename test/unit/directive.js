@@ -1,16 +1,17 @@
 describe("angular audio sprite directive", function() {
 
     var $httpBackend;
-    var $rootScope;
-    var $compile;
+    var element;
 
     beforeEach(module("ngAudioSprite.service"));
     beforeEach(module("ngAudioSprite.directive"));
 
     beforeEach(inject(function($injector) {
 
-        $rootScope = $injector.get("$rootScope");
-        $compile = $injector.get("$compile");
+        var $rootScope = $injector.get("$rootScope");
+        var $compile = $injector.get("$compile");
+
+        element = $compile('<audio audio-sprite></audio>')($rootScope);
 
         $httpBackend = $injector.get('$httpBackend');
 
@@ -25,6 +26,11 @@ describe("angular audio sprite directive", function() {
                 "round1": {
                     "start": 3,
                     "end": 4.824013605442177,
+                    "loop": false
+                },
+                "round2": {
+                    "start": 6,
+                    "end": 7.8959863945578235,
                     "loop": false
                 }
             }
@@ -55,7 +61,6 @@ describe("angular audio sprite directive", function() {
 
     it("should append a source tag with the appropriate type and src attributes values", inject(function(audioSprite) {
 
-        var element = $compile('<audio audio-sprite></audio>')($rootScope);
         var source;
 
         audioSprite.load("app/audio/sprite.json");
@@ -70,7 +75,6 @@ describe("angular audio sprite directive", function() {
 
     it("should update the current source tag if any if the config is updated", inject(function(audioSprite) {
 
-        var element = $compile('<audio audio-sprite></audio>')($rootScope);
         var source;
 
         audioSprite.load("app/audio/sprite.json");

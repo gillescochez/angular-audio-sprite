@@ -8,7 +8,7 @@ describe("angular audio sprite service", function() {
 
         $httpBackend = $injector.get('$httpBackend');
 
-        $httpBackend.when('GET', 'sprite.json').respond({
+        $httpBackend.when('GET', 'app/audio/sprite.json').respond({
             "resources": [
                 "sprite.ogg",
                 "sprite.m4a",
@@ -60,8 +60,8 @@ describe("angular audio sprite service", function() {
     }));
 
     it("should return audio sprite config on getSprite", inject(function(audioSprite) {
-        $httpBackend.expectGET("sprite.json");
-        audioSprite.load("sprite.json");
+        $httpBackend.expectGET("app/audio/sprite.json");
+        audioSprite.load("app/audio/sprite.json");
         $httpBackend.flush();
     }));
 

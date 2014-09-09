@@ -27,17 +27,21 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
 
     function setResource(resources, path) {
 
-        var source = document.createElement("source");
+        var source = angular.element(player).children()[0] || document.createElement("source");
         var extension = "." + type;
         var length = resources.length;
         var i = 0;
 
-        source.type = "audio/" + type;
+        if (!source.type || source.type !== type) {
+            source.type = "audio/" + type;
+        }
 
         for (; i < length; i++) {
             if (resources[i].substr(-4) === extension) {
+                if (!source.src) {
+                    player.appendChild(source);
+                }
                 source.src = path + resources[i];
-                player.appendChild(source);
                 return;
             }
         }

@@ -1,9 +1,9 @@
 {
-    "name": "ngAudioSprite",
+    "name": "angular-audio-sprite",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.1.0",
     "description": "Angular extension to play sounds using audio sprites.",
-    "repository": "https://github.com/gillescochez/ngAudioSprite",
+    "repository": "https://github.com/gillescochez/angular-audio-sprite",
     "license": "MIT",
     "devDependencies": {
         "karma": "~0.10",

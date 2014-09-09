@@ -17,4 +17,17 @@ describe("angular audio sprite service", function() {
         expect(typeof audioSprite.getSprite).toEqual("function");
     }));
 
+    it("should update the id property on play", inject(function(audioSprite) {
+        expect(audioSprite.id).toEqual("");
+        audioSprite.play("a");
+        expect(audioSprite.id).toEqual("a");
+    }));
+
+    it("should return audio sprite config on getSprite", inject(function(audioSprite) {
+        audioSprite.getSprite("../app/audio/sprite.json").success(function(data) {
+            expect(data.resources).toBeDefined();
+            expect(data.spritemap).toBeDefined();
+        });
+    }));
+
 });

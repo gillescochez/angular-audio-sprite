@@ -1,7 +1,9 @@
 module.exports = function(grunt) {
 
     var sources = [
-        "source/*.js",
+        "source/service.js",
+        "source/directive.js",
+        "source/module.js"
     ];
 
     var src = "<%= pkg.name %>.js";

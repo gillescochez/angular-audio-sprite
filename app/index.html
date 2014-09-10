@@ -9,7 +9,7 @@
 
 <body ng-app="demo" ng-controller="main">
 
-    <audio ng-audio-sprite></audio>
+    <audio ng-audio-sprite="audio/sprite.json"></audio>
 
     <button ng-repeat="id in list" ng-click="play(id)">{{id}}</button>
     <button ng-click="stop()">Stop</button>

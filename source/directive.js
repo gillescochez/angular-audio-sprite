@@ -32,6 +32,8 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
         var length = resources.length;
         var i = 0;
 
+        path = path || "";
+
         if (!source.type || source.type !== type) {
             source.type = "audio/" + type;
         }
@@ -93,6 +95,10 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
             !type && detectType();
 
             bindPlayer();
+
+            if (attr.ngAudioSprite) {
+                audioSprite.load(attr.ngAudioSprite);
+            }
 
             audioSprite.addObserver("config", configure, this);
             audioSprite.addObserver("id", function() {

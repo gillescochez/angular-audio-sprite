@@ -6,7 +6,7 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         config: {},
 
         configure: function(config) {
-            if (config && config.resources && config.path && config.spritemap) {
+            if (config && config.resources && config.spritemap) {
                 this.config = config;
                 notifyObservers("config");
             } else {

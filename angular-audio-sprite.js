@@ -1,4 +1,4 @@
-angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSprite", function(audioSprite) {
+angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audioSprite", function(audioSprite) {
 
     var player;
     var map = {};
@@ -86,7 +86,7 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
     return {
 
         restrict:"AEC",
-        link: function(scope, element) {
+        link: function(scope, element, attr) {
 
             player = element[0];
 

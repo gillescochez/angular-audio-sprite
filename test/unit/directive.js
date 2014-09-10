@@ -11,7 +11,7 @@ describe("angular audio sprite directive", function() {
         var $rootScope = $injector.get("$rootScope");
         var $compile = $injector.get("$compile");
 
-        element = $compile('<audio audio-sprite></audio>')($rootScope);
+        element = $compile('<audio ng-audio-sprite></audio>')($rootScope);
 
         $httpBackend = $injector.get('$httpBackend');
 

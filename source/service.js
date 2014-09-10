@@ -6,7 +6,6 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         config: {},
 
         play: function(id) {
-            console.log(id);
             this.id = id;
             notifyObservers("id");
         },

@@ -50,8 +50,14 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
     }
 
     function onTimeUpdate() {
+
         if (player.currentTime >= current.end) {
+
             player.pause();
+
+            if (current.loop) {
+                play();
+            }
         }
     }
 

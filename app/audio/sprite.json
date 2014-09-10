@@ -9,7 +9,7 @@
     "round-final": {
       "start": 0,
       "end": 1.92,
-      "loop": false
+      "loop": true
     },
     "round1": {
       "start": 3,

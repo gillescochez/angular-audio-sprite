@@ -88,10 +88,10 @@ describe("angular audio sprite directive", function() {
 
         spyOn(audioSprite, "spritemap");
 
-        $compile('<audio ng-audio-sprite ng-audio-spritemap="{\'foo\':true}"></audio>')($rootScope);
+        $compile('<audio ng-audio-sprite ng-audio-spritemap=\'{"foo":true}\'></audio>')($rootScope);
 
         expect(audioSprite.spritemap).toHaveBeenCalled();
-        expect(audioSprite.spritemap).toHaveBeenCalledWith("{'foo':true}");
+        expect(audioSprite.spritemap).toHaveBeenCalledWith({foo:true});
 
     }));
 

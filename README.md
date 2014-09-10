@@ -45,7 +45,7 @@ Respect the same format as the configuration object but set the paths for resour
 
 From the service `audioSprite.configure(config);`
 
-From the directive ```html <audio ng-audio-sprite="sprite.json"></audio> ```
+From the directive `<audio ng-audio-sprite="sprite.json"></audio>`
 
 Updating the directive attribute when used will trigger loading
 

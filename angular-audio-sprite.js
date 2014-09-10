@@ -3,7 +3,7 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
     var player;
     var map = {};
     var current = {};
-    var types = ["ogg","m4a","mp3", "ac3"];
+    var types = ["ogg","m4a","mp3", "ac3", "caf"];
     var type = "";
 
     function detectType() {
@@ -57,7 +57,9 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
         angular.element(player).on('timeupdate', onTimeUpdate);
     }
 
-    function play(id) {
+    function play() {
+
+        var id = audioSprite.id;
 
         if (map[id]) {
 
@@ -67,10 +69,24 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
         }
     }
 
+    function stop() {
+        player.pause();
+    }
+
+    function configure() {
+
+        var config = audioSprite.config;
+
+        if (config.resources && config.spritemap) {
+            setResource(config.resources, config.path);
+            map = config.spritemap;
+        }
+    }
+
     return {
 
         restrict:"AEC",
-        link: function(scope, element, attr) {
+        link: function(scope, element) {
 
             player = element[0];
 
@@ -78,18 +94,16 @@ angular.module("ngAudioSprite.directive", []).directive("audioSprite", ["audioSp
 
             bindPlayer();
 
-            scope.$watch(function() { return audioSprite.config }, function(config) {
-
-                if (config.resources && config.spritemap) {
-                    setResource(config.resources, config.path);
-                    map = config.spritemap;
+            audioSprite.addObserver("config", configure, this);
+            audioSprite.addObserver("id", function() {
+                if (audioSprite.id) {
+                    play();
+                } else {
+                    stop();
                 }
-            });
+            }, this);
 
-            scope.$watch(function() { return audioSprite.id }, function(id) {
-                id && play(id);
-            });
-
+            scope.$on("$destroy", audioSprite.removeObservers)
         }
 
     };
@@ -101,19 +115,28 @@ angular.module("ngAudioSprite", [
 ]);
 angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", function($http) {
 
-    function getPath(url) {
-        var parts = url.split("/");
-        parts.splice(parts.length - 1, 1);
-        return parts.join("/") + "/";
-    }
-
-    return {
+    var audioSprite = {
 
         id: "",
         config: {},
 
+        configure: function(config) {
+            if (config && config.resources && config.path && config.spritemap) {
+                this.config = config;
+                notifyObservers("config");
+            } else {
+                throw "Invalid configuration object";
+            }
+        },
+
         play: function(id) {
             this.id = id;
+            notifyObservers("id");
+        },
+
+        stop: function() {
+            this.id = "";
+            notifyObservers("id");
         },
 
         load: function(file) {
@@ -123,10 +146,47 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
             $http.get(file).success(function(data) {
                 self.config = data;
                 self.config.path = getPath(file);
+                notifyObservers("config");
             }).error(function() {
                 throw "Failed to retrieve audio sprite configuration file: " + file;
             })
-        }
+        },
+
+        addObserver: addObserver,
+        removeObservers: removeObservers
+
     };
+
+    var observers = {};
+
+    function getPath(url) {
+        var parts = url.split("/");
+        parts.splice(parts.length - 1, 1);
+        return parts.join("/") + "/";
+    }
+
+    function notifyObservers(prop) {
+        angular.forEach(observers[prop], function(observer){
+            observer.callback.call(observer.scope);
+        });
+    }
+
+    function addObserver(prop, callback, scope) {
+
+        if (!observers[prop]) {
+            observers[prop] = [];
+        }
+
+        observers[prop].push({
+            callback: callback,
+            scope: scope
+        });
+    }
+
+    function removeObservers() {
+        observers = {};
+    }
+
+    return audioSprite;
 
 }]);

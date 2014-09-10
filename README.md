@@ -37,17 +37,15 @@ When loading a config file a base path will be generated based on the configurat
 
 From the service `audioSprite.load("sprite.json");`
 
-From the directive `<audio ng-audio-sprite="sprite.json"></audio>`
+or
+
+From the directive `<audio ng-audio-sprite="sprite.json"></audio>`. Updating the directive attribute when used will trigger loading
 
 ### Setting the configuration file
 
 Respect the same format as the configuration object but set the paths for resources as no request path will be available to generate them.
 
 From the service `audioSprite.configure(config);`
-
-From the directive `<audio ng-audio-sprite="sprite.json"></audio>`
-
-Updating the directive attribute when used will trigger loading
 
 ### Playing a sound
 

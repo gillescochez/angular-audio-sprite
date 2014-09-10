@@ -32,6 +32,8 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
         var length = resources.length;
         var i = 0;
 
+        path = path || "";
+
         if (!source.type || source.type !== type) {
             source.type = "audio/" + type;
         }
@@ -86,7 +88,7 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
     return {
 
         restrict:"AEC",
-        link: function(scope, element, attr) {
+        link: function(scope, element, attrs) {
 
             player = element[0];
 
@@ -94,8 +96,33 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
 
             bindPlayer();
 
-            audioSprite.addObserver("config", configure, this);
-            audioSprite.addObserver("id", function() {
+            if (attrs.ngAudioSprite !== "") {
+
+                audioSprite.load(attrs.ngAudioSprite);
+
+                attrs.$observe("ng-audio-sprite", function(file) {
+                    if (file) {
+                        audioSprite.load(file);
+                    }
+                });
+            }
+
+            if (attrs.ngAudioSpritemap) {
+
+                map = JSON.parse(attrs.ngAudioSpritemap);
+                audioSprite.spritemap(map);
+
+                attrs.$observe("ng-audio-spritemap", function(spritemap) {
+                    if (spritemap) {
+                        spritemap = JSON.parse(spritemap);
+                        audioSprite.spritemap(spritemap);
+                        map = spritemap;
+                    }
+                });
+            }
+
+            audioSprite.observe("config", configure, this);
+            audioSprite.observe("id", function() {
                 if (audioSprite.id) {
                     play();
                 } else {
@@ -120,16 +147,8 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         id: "",
         config: {},
 
-        configure: function(config) {
-            if (config && config.resources && config.path && config.spritemap) {
-                this.config = config;
-                notifyObservers("config");
-            } else {
-                throw "Invalid configuration object";
-            }
-        },
-
         play: function(id) {
+            console.log(id);
             this.id = id;
             notifyObservers("id");
         },
@@ -137,6 +156,19 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         stop: function() {
             this.id = "";
             notifyObservers("id");
+        },
+
+        spritemap: function(spritemap) {
+            this.config.spritemap = spritemap;
+        },
+
+        configure: function(config) {
+            if (config && config.resources && config.spritemap) {
+                this.config = config;
+                notifyObservers("config");
+            } else {
+                throw "Invalid configuration object";
+            }
         },
 
         load: function(file) {
@@ -152,7 +184,7 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
             })
         },
 
-        addObserver: addObserver,
+        observe: addObserver,
         removeObservers: removeObservers
 
     };

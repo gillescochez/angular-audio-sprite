@@ -88,7 +88,7 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
     return {
 
         restrict:"AEC",
-        link: function(scope, element, attr) {
+        link: function(scope, element, attrs) {
 
             player = element[0];
 
@@ -96,12 +96,33 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
 
             bindPlayer();
 
-            if (attr.ngAudioSprite) {
-                audioSprite.load(attr.ngAudioSprite);
+            if (attrs.ngAudioSprite !== "") {
+
+                audioSprite.load(attrs.ngAudioSprite);
+
+                attrs.$observe("ng-audio-sprite", function(file) {
+                    if (file) {
+                        audioSprite.load(file);
+                    }
+                });
             }
 
-            audioSprite.addObserver("config", configure, this);
-            audioSprite.addObserver("id", function() {
+            if (attrs.ngAudioSpritemap) {
+
+                map = JSON.parse(attrs.ngAudioSpritemap);
+                audioSprite.spritemap(map);
+
+                attrs.$observe("ng-audio-spritemap", function(spritemap) {
+                    if (spritemap) {
+                        spritemap = JSON.parse(spritemap);
+                        audioSprite.spritemap(spritemap);
+                        map = spritemap;
+                    }
+                });
+            }
+
+            audioSprite.observe("config", configure, this);
+            audioSprite.observe("id", function() {
                 if (audioSprite.id) {
                     play();
                 } else {

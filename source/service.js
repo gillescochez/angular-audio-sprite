@@ -5,16 +5,8 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         id: "",
         config: {},
 
-        configure: function(config) {
-            if (config && config.resources && config.spritemap) {
-                this.config = config;
-                notifyObservers("config");
-            } else {
-                throw "Invalid configuration object";
-            }
-        },
-
         play: function(id) {
+            console.log(id);
             this.id = id;
             notifyObservers("id");
         },
@@ -22,6 +14,19 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         stop: function() {
             this.id = "";
             notifyObservers("id");
+        },
+
+        spritemap: function(spritemap) {
+            this.config.spritemap = spritemap;
+        },
+
+        configure: function(config) {
+            if (config && config.resources && config.spritemap) {
+                this.config = config;
+                notifyObservers("config");
+            } else {
+                throw "Invalid configuration object";
+            }
         },
 
         load: function(file) {
@@ -37,7 +42,7 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
             })
         },
 
-        addObserver: addObserver,
+        observe: addObserver,
         removeObservers: removeObservers
 
     };

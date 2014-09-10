@@ -3,16 +3,33 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
     var audioSprite = {
 
         id: "",
+        muted: false,
+        volumeValue: 1,
         config: {},
+
+        mute: function() {
+            this.muted = true;
+            notify("muted");
+        },
+
+        unmute: function() {
+            this.muted = false;
+            notify("muted");
+        },
+
+        volume: function(amount) {
+            this.volumeValue = amount;
+            notify("volumeValue");
+        },
 
         play: function(id) {
             this.id = id;
-            notifyObservers("id");
+            notify("id");
         },
 
         stop: function() {
             this.id = "";
-            notifyObservers("id");
+            notify("id");
         },
 
         spritemap: function(spritemap) {
@@ -22,7 +39,7 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         configure: function(config) {
             if (config && config.resources && config.spritemap) {
                 this.config = config;
-                notifyObservers("config");
+                notify("config");
             } else {
                 throw "Invalid configuration object";
             }
@@ -35,14 +52,14 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
             $http.get(file).success(function(data) {
                 self.config = data;
                 self.config.path = getPath(file);
-                notifyObservers("config");
+                notify("config");
             }).error(function() {
                 throw "Failed to retrieve audio sprite configuration file: " + file;
             })
         },
 
-        observe: addObserver,
-        removeObservers: removeObservers
+        observe: observe,
+        destroy: destroy
 
     };
 
@@ -54,13 +71,13 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         return parts.join("/") + "/";
     }
 
-    function notifyObservers(prop) {
+    function notify(prop) {
         angular.forEach(observers[prop], function(observer){
-            observer.callback.call(observer.scope);
+            observer.callback.call(observer.scope, audioSprite[prop]);
         });
     }
 
-    function addObserver(prop, callback, scope) {
+    function observe(prop, callback, scope) {
 
         if (!observers[prop]) {
             observers[prop] = [];
@@ -72,7 +89,7 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
         });
     }
 
-    function removeObservers() {
+    function destroy() {
         observers = {};
     }
 

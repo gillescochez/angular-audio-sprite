@@ -65,9 +65,7 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
         angular.element(player).on('timeupdate', onTimeUpdate);
     }
 
-    function play() {
-
-        var id = audioSprite.id;
+    function play(id) {
 
         if (map[id]) {
 
@@ -81,14 +79,20 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
         player.pause();
     }
 
-    function configure() {
-
-        var config = audioSprite.config;
+    function configure(config) {
 
         if (config.resources && config.spritemap) {
             setResource(config.resources, config.path);
             map = config.spritemap;
         }
+    }
+
+    function muted(value) {
+        player.muted = value;
+    }
+
+    function volume(amount) {
+        player.volume = amount;
     }
 
     return {
@@ -127,16 +131,18 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
                 });
             }
 
+            audioSprite.observe("volumeValue", volume, this);
+            audioSprite.observe("muted", muted, this);
             audioSprite.observe("config", configure, this);
-            audioSprite.observe("id", function() {
-                if (audioSprite.id) {
-                    play();
+            audioSprite.observe("id", function(id) {
+                if (id) {
+                    play(id);
                 } else {
                     stop();
                 }
             }, this);
 
-            scope.$on("$destroy", audioSprite.removeObservers)
+            scope.$on("$destroy", audioSprite.destroy)
         }
 
     };

@@ -8,8 +8,20 @@ as well as a JSON map of the sounds.
 
 ## Usage
 
-`<audio audio-sprite></audio>`
+### HTML
 
+```
+<body ng-app="demo" ng-controller="main">
+
+    <audio audio-sprite></audio>
+
+    <button ng-repeat="id in list" ng-click="play(id)">{{id}}</button>
+    <button ng-click="stop()">Stop</button>
+
+</body>
+```
+
+### JS
 
 ```
 

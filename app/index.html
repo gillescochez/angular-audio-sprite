@@ -12,7 +12,13 @@
     <audio ng-audio-sprite="audio/sprite.json"></audio>
 
     <button ng-repeat="id in list" ng-click="play(id)">{{id}}</button>
+
+    <br />
+
+    <button ng-click="mute()">Mute</button>
+    <button ng-click="pause()">Pause</button>
     <button ng-click="stop()">Stop</button>
+    <input ng-change="volume()" ng-model="volumeValue" type="number" min="0" max="100" />
 
 </body>
 </html>

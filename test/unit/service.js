@@ -38,24 +38,34 @@ describe("angular audio sprite service", function() {
         $httpBackend.verifyNoOutstandingRequest();
     });
 
-    it("should expose an id STRING property", inject(function(audioSprite) {
+    it("should expose an id STRING property which default to an empty string", inject(function(audioSprite) {
         expect(audioSprite.id).toBeDefined();
         expect(typeof audioSprite.id).toEqual("string");
+        expect(audioSprite.id).toEqual("");
     }));
 
-    it("should expose an config OBJECT property", inject(function(audioSprite) {
+    it("should expose an config OBJECT property which default to an empty object", inject(function(audioSprite) {
         expect(audioSprite.config).toBeDefined();
         expect(typeof audioSprite.config).toEqual("object");
+        expect(audioSprite.config).toEqual({});
     }));
 
-    it("should expose an muted BOOLEAN property", inject(function(audioSprite) {
+    it("should expose an muted BOOLEAN property which default to false", inject(function(audioSprite) {
         expect(audioSprite.muted).toBeDefined();
         expect(typeof audioSprite.muted).toEqual("boolean");
+        expect(audioSprite.muted).toEqual(false);
     }));
 
-    it("should expose an volumeValue OBJECT property", inject(function(audioSprite) {
+    it("should expose an paused BOOLEAN property which default to true", inject(function(audioSprite) {
+        expect(audioSprite.muted).toBeDefined();
+        expect(typeof audioSprite.muted).toEqual("boolean");
+        expect(audioSprite.muted).toEqual(false);
+    }));
+
+    it("should expose an volumeValue NUMBER property which default to 1", inject(function(audioSprite) {
         expect(audioSprite.volumeValue).toBeDefined();
         expect(typeof audioSprite.volumeValue).toEqual("number");
+        expect(audioSprite.volumeValue).toEqual(1);
     }));
 
     it("should expose a play method", inject(function(audioSprite) {
@@ -114,16 +124,38 @@ describe("angular audio sprite service", function() {
         expect(audioSprite.id).toEqual("a");
     }));
 
-    it("should return audio sprite config on getSprite", inject(function(audioSprite) {
+    it("should return audio sprite config on load()", inject(function(audioSprite) {
         $httpBackend.expectGET("app/audio/sprite.json");
         audioSprite.load("app/audio/sprite.json");
         $httpBackend.flush();
     }));
 
-    it("should update the id property on play", inject(function(audioSprite) {
+    it("should update the id property on play()", inject(function(audioSprite) {
         expect(audioSprite.id).toEqual("");
         audioSprite.play("a");
         expect(audioSprite.id).toEqual("a");
+    }));
+
+    it("should update the volumeValue property on volume()", inject(function(audioSprite) {
+        expect(audioSprite.volumeValue).toEqual(1);
+        audioSprite.volume(0.5);
+        expect(audioSprite.volumeValue).toEqual(0.5);
+    }));
+
+    it("should update the muted property on mute/unmute()", inject(function(audioSprite) {
+        expect(audioSprite.muted).toEqual(false);
+        audioSprite.mute();
+        expect(audioSprite.muted).toEqual(true);
+        audioSprite.unmute();
+        expect(audioSprite.muted).toEqual(false);
+    }));
+
+    it("should update the paused property on play/pause()", inject(function(audioSprite) {
+        expect(audioSprite.paused).toEqual(true);
+        audioSprite.play("round1");
+        expect(audioSprite.paused).toEqual(false);
+        audioSprite.pause();
+        expect(audioSprite.paused).toEqual(true);
     }));
 
     it("should set the configuration property when configure is used", inject(function(audioSprite) {

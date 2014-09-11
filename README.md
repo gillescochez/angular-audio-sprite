@@ -41,7 +41,7 @@ or
 
 From the directive `<audio ng-audio-sprite="sprite.json"></audio>`. Updating the directive attribute when used will trigger loading
 
-### Setting the configuration file
+### Setting the configuration
 
 Respect the same format as the configuration object but set the paths for resources as no request path will be available to generate them.
 
@@ -59,6 +59,24 @@ Simply call `stop` on the service
 
 `audioSprite.stop();`
 
+### Pausing a sound
+
+Simply call `pause` on the service
+
+`audioSprite.pause();`
+
+### Muting a sound
+
+Simply call `mute` on the service
+
+`audioSprite.mute();` `audioSprite.unmute();`
+
+### Setting the volume
+
+Simply call `volume` on the service (max = 1)
+
+`audioSprite.volume(0.5);`
+
 ### Doing more from the directive
 
 You can also still set yourself the sources for the audio and simply pass the sprite map via the `ng-audio-spritemap` attribute.
@@ -69,6 +87,27 @@ Attribute update will update the sprite map used.
 <audio ng-audio-sprite ng-audio-spritemap='{"sound1": { "start": 0, "end": 1.92, "loop": false }, "sound2": { "start": 3, "end": 4.824013605442177, "loop": false}}'>
     <source src="sprite.ogg" type="audio/ogg" />
 </audio>
+
+```
+
+### Listening to property changes
+
+The service as an `observe` method which allows other object to listen to property change.
+`$watch` wasn't working well and I wanted to avoid using `$on` and `$broadcast`.
+
+Make sure to call the `destroy` method when the `$destroy` event is fired on the scope.
+
+
+```js
+
+/**
+ * @param id {String} Property to observe
+ * @param callback {Function} Callback function
+ * @param [scope] {Object} Scope for the callback function
+ */
+audioSprite.observe("id", function(newIdValue) {
+    // do stuff
+}, this);
 
 ```
 

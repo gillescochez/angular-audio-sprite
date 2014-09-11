@@ -4,6 +4,7 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
 
         id: "",
         muted: false,
+        paused: true,
         volumeValue: 1,
         config: {},
 
@@ -22,12 +23,20 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
             notify("volumeValue");
         },
 
+        pause: function() {
+            this.paused = true;
+            notify("paused");
+        },
+
         play: function(id) {
+            this.paused = false;
             this.id = id;
+            notify("paused");
             notify("id");
         },
 
         stop: function() {
+            this.pause();
             this.id = "";
             notify("id");
         },
@@ -91,6 +100,11 @@ angular.module("ngAudioSprite.service", []).factory("audioSprite", ["$http", fun
 
     function destroy() {
         observers = {};
+        audioSprite.id = "";
+        audioSprite.muted = false;
+        audioSprite.paused = true;
+        audioSprite.volumeValue = 1;
+        audioSprite.config = {};
     }
 
     return audioSprite;

@@ -91,6 +91,12 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
         player.muted = value;
     }
 
+    function paused(value) {
+        if (value && !player.paused) {
+            player.pause();
+        }
+    }
+
     function volume(amount) {
         player.volume = amount;
     }
@@ -133,6 +139,7 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
 
             audioSprite.observe("volumeValue", volume, this);
             audioSprite.observe("muted", muted, this);
+            audioSprite.observe("paused", paused, this);
             audioSprite.observe("config", configure, this);
             audioSprite.observe("id", function(id) {
                 if (id) {

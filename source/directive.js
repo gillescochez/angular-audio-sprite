@@ -69,9 +69,13 @@ angular.module("ngAudioSprite.directive", []).directive("ngAudioSprite", ["audio
 
         if (map[id]) {
 
-            current = map[id];
-            player.currentTime = current.start;
-            player.play();
+            if (current === map[id] && player.paused && player.currentTime < current.end) {
+                player.play();
+            } else {
+                current = map[id];
+                player.currentTime = current.start;
+                player.play();
+            }
         }
     }
 
